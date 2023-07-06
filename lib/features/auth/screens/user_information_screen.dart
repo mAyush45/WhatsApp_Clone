@@ -31,17 +31,17 @@ class _UserInformationScreenState extends ConsumerState<UserInformationScreen> {
     setState(() {});
   }
 
-  // void storeUserData() async {
-  //   String name = nameController.text.trim();
-  //
-  //   if (name.isNotEmpty) {
-  //     ref.read(authControllerProvider).saveUserDataToFirebase(
-  //       context,
-  //       name,
-  //       image,
-  //     );
-  //   }
-  // }
+  void storeUserData() async {
+    String name = nameController.text.trim();
+
+    if (name.isNotEmpty) {
+      ref.read(authControllerProvider).saveUserDataToFirebase(
+        context,
+        name,
+        image,
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -95,7 +95,7 @@ class _UserInformationScreenState extends ConsumerState<UserInformationScreen> {
                     ),
                   ),
                   IconButton(
-                    onPressed: () {},
+                    onPressed: storeUserData,
                     icon: const Icon(
                       Icons.done,
                       color: Colors.white60,

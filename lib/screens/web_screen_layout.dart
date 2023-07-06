@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:whatsapp_clone/colors.dart';
-import 'package:whatsapp_clone/widgets/chat_list.dart';
-import 'package:whatsapp_clone/widgets/contacts_list.dart';
-import 'package:whatsapp_clone/widgets/web_chat-appbar.dart';
+import 'package:whatsapp_clone/features/chat/widgets/contacts_list.dart';
 import 'package:whatsapp_clone/widgets/web_profile_bar.dart';
 import 'package:whatsapp_clone/widgets/web_search_bar.dart';
+
+import '../features/chat/widgets/chat_list.dart';
 
 class WebLayoutScreen extends StatelessWidget {
   const WebLayoutScreen({Key? key}) : super(key: key);
@@ -15,10 +15,10 @@ class WebLayoutScreen extends StatelessWidget {
       body: Row(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Expanded(
+          const Expanded(
             child: SingleChildScrollView(
               child: Column(
-                children: const [
+                children: [
                   WebProfileBar(),
                   WebSearchBar(),
                   ContactsList(),
@@ -44,7 +44,9 @@ class WebLayoutScreen extends StatelessWidget {
                 // const ChatAppBar(),
                 const SizedBox(height: 20),
                 const Expanded(
-                  child: ChatList(),
+                  child: ChatList(
+                    receiverUserId: '',
+                  ),
                 ),
                 Container(
                   height: MediaQuery.of(context).size.height * 0.07,
@@ -82,7 +84,7 @@ class WebLayoutScreen extends StatelessWidget {
                               filled: true,
                               fillColor: searchBarColor,
                               hintText: 'Type a message',
-                              hintStyle: const TextStyle(color: textColor ),
+                              hintStyle: const TextStyle(color: textColor),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(20.0),
                                 borderSide: const BorderSide(
