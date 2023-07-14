@@ -1,19 +1,16 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../../../colors.dart';
-import '../../../common/utils/utils.dart';
-import '../controller/auth_controller.dart';
+import 'package:whatsapp_clone/common/utils/utils.dart';
+import 'package:whatsapp_clone/features/auth/controller/auth_controller.dart';
 
 class UserInformationScreen extends ConsumerStatefulWidget {
-  static const String routeName = '/user-information-screen';
-
+  static const String routeName = '/user-information';
   const UserInformationScreen({Key? key}) : super(key: key);
 
   @override
-  _UserInformationScreenState createState() => _UserInformationScreenState();
+  ConsumerState<UserInformationScreen> createState() =>
+      _UserInformationScreenState();
 }
 
 class _UserInformationScreenState extends ConsumerState<UserInformationScreen> {
@@ -36,36 +33,37 @@ class _UserInformationScreenState extends ConsumerState<UserInformationScreen> {
 
     if (name.isNotEmpty) {
       ref.read(authControllerProvider).saveUserDataToFirebase(
-        context,
-        name,
-        image,
-      );
+            context,
+            name,
+            image,
+          );
     }
   }
 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+
     return Scaffold(
       body: SafeArea(
         child: Center(
           child: Column(
             children: [
-              SizedBox(height: 35),
               Stack(
                 children: [
-                  if (image == null)
-                    const CircleAvatar(
-                      backgroundImage: NetworkImage(
-                        'https://png.pngitem.com/pimgs/s/649-6490124_katie-notopoulos-katienotopoulos-i-write-about-tech-round.png',
-                      ),
-                      radius: 60,
-                    )
-                  else
-                    CircleAvatar(
-                      backgroundImage: FileImage(image!),
-                      radius: 60,
-                    ),
+                  image == null
+                      ? const CircleAvatar(
+                          backgroundImage: NetworkImage(
+                            'https://png.pngitem.com/pimgs/s/649-6490124_katie-notopoulos-katienotopoulos-i-write-about-tech-round.png',
+                          ),
+                          radius: 64,
+                        )
+                      : CircleAvatar(
+                          backgroundImage: FileImage(
+                            image!,
+                          ),
+                          radius: 64,
+                        ),
                   Positioned(
                     bottom: -10,
                     left: 80,
@@ -73,24 +71,20 @@ class _UserInformationScreenState extends ConsumerState<UserInformationScreen> {
                       onPressed: selectImage,
                       icon: const Icon(
                         Icons.add_a_photo,
-                        color: Colors.white60,
                       ),
                     ),
                   ),
                 ],
               ),
               Row(
-                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Container(
                     width: size.width * 0.85,
                     padding: const EdgeInsets.all(20),
                     child: TextField(
-                      textAlign: TextAlign.center,
                       controller: nameController,
                       decoration: const InputDecoration(
                         hintText: 'Enter your name',
-                        hintStyle: TextStyle(color: textColor, fontSize: 16),
                       ),
                     ),
                   ),
@@ -98,7 +92,6 @@ class _UserInformationScreenState extends ConsumerState<UserInformationScreen> {
                     onPressed: storeUserData,
                     icon: const Icon(
                       Icons.done,
-                      color: Colors.white60,
                     ),
                   ),
                 ],

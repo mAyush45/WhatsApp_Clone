@@ -1,16 +1,16 @@
-import 'package:country_code_picker/country_code_picker.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:country_picker/country_picker.dart';
+
+import '';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:whatsapp_clone/colors.dart';
-import 'package:whatsapp_clone/common/widgets/custom_button.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:whatsapp_clone/common/utils/utils.dart';
+import 'package:whatsapp_clone/common/widgets/custom_button.dart';
 import 'package:whatsapp_clone/features/auth/controller/auth_controller.dart';
+
+import '../../../common/utils/colors.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   static const routeName = '/login-screen';
-
   const LoginScreen({Key? key}) : super(key: key);
 
   @override
@@ -19,8 +19,7 @@ class LoginScreen extends ConsumerStatefulWidget {
 
 class _LoginScreenState extends ConsumerState<LoginScreen> {
   final phoneController = TextEditingController();
-  String selectedCountryCode = '+91';
-  bool isButtonDisabled = false;
+  Country? country;
 
   @override
   void dispose() {
@@ -28,121 +27,72 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     phoneController.dispose();
   }
 
-  void sendPhoneNumber()  {
-    String phoneNumber = selectedCountryCode + phoneController.text;
-    if (selectedCountryCode.isNotEmpty && phoneNumber.isNotEmpty) {
-      setState(() {
-        isButtonDisabled = true;
-      });
-      try {
-        ref.read(authControllerProvider).signInWithPhone(context, phoneNumber);
-        // Navigate to OTP screen or handle the logic as needed
-      } catch (error) {
-        // Handle the error if needed
-      } finally {
-        setState(() {
-          isButtonDisabled = false;
+  void pickCountry() {
+    showCountryPicker(
+        context: context,
+        onSelect: (Country _country) {
+          setState(() {
+            country = _country;
+          });
         });
-      }
+  }
+
+  void sendPhoneNumber() {
+    String phoneNumber = phoneController.text.trim();
+    if (country != null && phoneNumber.isNotEmpty) {
+      ref
+          .read(authControllerProvider)
+          .signInWithPhone(context, '+${country!.phoneCode}$phoneNumber');
     } else {
       showSnackBar(context: context, content: 'Fill out all the fields');
     }
   }
 
-  void showCountryPickerDialog() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Pick Country'),
-          content: CountryCodePicker(
-            onChanged: (value) {
-              setState(() {
-                selectedCountryCode = value.dialCode!;
-              });
-              Navigator.pop(context); // Close the dialog
-            },
-            initialSelection: 'IN',
-            showCountryOnly: false,
-            showOnlyCountryWhenClosed: false,
-            alignLeft: false,
-          ),
-        );
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'Enter Your Phone Number',
-          style: TextStyle(fontWeight: FontWeight.w600),
-        ),
+        title: const Text('Enter your phone number'),
         elevation: 0,
-        centerTitle: true,
         backgroundColor: backgroundColor,
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: const Icon(CupertinoIcons.back),
-          color: Colors.white,
-        ),
       ),
       body: SingleChildScrollView(
-        child: Container(
-          height: size.height - MediaQuery.of(context).padding.top - kToolbarHeight,
+        child: Padding(
           padding: const EdgeInsets.all(18.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const Text(
-                'WhatsApp will need to verify your phone number.',
-                style: TextStyle(color: Colors.white),
-              ),
+              const Text('WhatsApp will need to verify your phone number.'),
               const SizedBox(height: 10),
               TextButton(
-                onPressed: () {
-                  showCountryPickerDialog();
-                },
-                child: const Text(
-                  'Pick Country',
-                  style: TextStyle(fontWeight: FontWeight.w600, fontSize: 15),
-                ),
+                onPressed: pickCountry,
+                child: const Text('Pick Country'),
               ),
               const SizedBox(height: 5),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      selectedCountryCode.toString(),
-                      style: const TextStyle(color: Colors.white),
-                    ),
-                    const SizedBox(width: 10),
-                    Expanded(
-                      child: TextField(
-                        controller: phoneController,
-                        keyboardType: TextInputType.phone,
-                        inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                        style: const TextStyle(color: Colors.white),
-                        decoration: const InputDecoration(
-                          hintText: 'Phone Number',
-                          hintStyle: TextStyle(color: Colors.white),
-                        ),
+              Row(
+                children: [
+                  if (country != null) Text('+${country!.phoneCode}'),
+                  const SizedBox(width: 10),
+                  SizedBox(
+                    width: size.width * 0.7,
+                    child: TextField(
+                      controller: phoneController,
+                      decoration: const InputDecoration(
+                        hintText: 'phone number',
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-              const Spacer(),
+              SizedBox(height: size.height * 0.6),
               SizedBox(
                 width: 90,
-                child: CustomButton(onPressed: sendPhoneNumber, text: 'NEXT'),
+                child: CustomButton(
+                  onPressed: sendPhoneNumber,
+                  text: 'NEXT',
+                ),
               ),
             ],
           ),

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 
 class VideoPlayerItem extends StatefulWidget {
   final String videoUrl;
-
   const VideoPlayerItem({
     Key? key,
     required this.videoUrl,
@@ -23,29 +22,12 @@ class _VideoPlayerItemState extends State<VideoPlayerItem> {
     videoPlayerController = CachedVideoPlayerController.network(widget.videoUrl)
       ..initialize().then((value) {
         videoPlayerController.setVolume(1);
-        videoPlayerController.addListener(videoPlayerListener);
       });
   }
-
-  void videoPlayerListener() {
-    if (videoPlayerController.value.isPlaying &&
-        videoPlayerController.value.duration ==
-            videoPlayerController.value.position) {
-      // Video has completed playing
-      videoPlayerController.seekTo(Duration.zero);
-      videoPlayerController.pause();
-    }
-
-    setState(() {
-      isPlay = videoPlayerController.value.isPlaying;
-    });
-  }
-
 
   @override
   void dispose() {
     super.dispose();
-    videoPlayerController.removeListener(videoPlayerListener);
     videoPlayerController.dispose();
   }
 
@@ -60,19 +42,18 @@ class _VideoPlayerItemState extends State<VideoPlayerItem> {
             alignment: Alignment.center,
             child: IconButton(
               onPressed: () {
+                if (isPlay) {
+                  videoPlayerController.pause();
+                } else {
+                  videoPlayerController.play();
+                }
+
                 setState(() {
                   isPlay = !isPlay;
                 });
-
-                if (isPlay) {
-                  videoPlayerController.play();
-                } else {
-                  videoPlayerController.pause();
-                }
               },
-
               icon: Icon(
-                isPlay ? Icons.pause_circle : Icons.play_circle, color: Colors.white,
+                isPlay ? Icons.pause_circle : Icons.play_circle,
               ),
             ),
           ),
