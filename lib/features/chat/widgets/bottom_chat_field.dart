@@ -16,12 +16,12 @@ import '../../../common/provider/message_reply_provider.dart';
 
 class BottomChatField extends ConsumerStatefulWidget {
   final String recieverUserId;
-  final bool isGroupChat;
-
+  final String receiverUserName;
   const BottomChatField({
     Key? key,
+    required this.receiverUserName,
     required this.recieverUserId,
-    required this.isGroupChat,
+
   }) : super(key: key);
 
   @override
@@ -58,8 +58,7 @@ class _BottomChatFieldState extends ConsumerState<BottomChatField> {
       ref.read(chatControllerProvider).sendTextMessage(
             context,
             _messageController.text.trim(),
-            widget.recieverUserId,
-            widget.isGroupChat,
+            widget.recieverUserId
           );
       setState(() {
         _messageController.text = '';
@@ -93,8 +92,7 @@ class _BottomChatFieldState extends ConsumerState<BottomChatField> {
           context,
           file,
           widget.recieverUserId,
-          messageEnum,
-          widget.isGroupChat,
+          messageEnum
         );
   }
 
@@ -119,7 +117,7 @@ class _BottomChatFieldState extends ConsumerState<BottomChatField> {
             context,
             gif.url,
             widget.recieverUserId,
-            widget.isGroupChat,
+
           );
     }
   }
@@ -164,7 +162,7 @@ class _BottomChatFieldState extends ConsumerState<BottomChatField> {
     final isShowMessageReply = messageReply != null;
     return Column(
       children: [
-        isShowMessageReply ? const MessageReplyPreview() : const SizedBox(),
+        isShowMessageReply ?  MessageReplyPreview(senderName: widget.receiverUserName,) : const SizedBox(),
         Row(
           children: [
             Expanded(
@@ -186,23 +184,29 @@ class _BottomChatFieldState extends ConsumerState<BottomChatField> {
                   filled: true,
                   fillColor: mobileChatBoxColor,
                   prefixIcon: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                    padding: const EdgeInsets.symmetric(horizontal: 10.0),
                     child: SizedBox(
                       width: 100,
                       child: Row(
                         children: [
-                          IconButton(
-                            onPressed: toggleEmojiKeyboardContainer,
-                            icon: const Icon(
-                              Icons.emoji_emotions,
-                              color: Colors.grey,
+                          SizedBox(
+                            width: 40,
+                            child: IconButton(
+                              onPressed: toggleEmojiKeyboardContainer,
+                              icon: const Icon(
+                                Icons.emoji_emotions,
+                                color: Colors.grey,
+                              ),
                             ),
                           ),
-                          IconButton(
-                            onPressed: selectGIF,
-                            icon: const Icon(
-                              Icons.gif,
-                              color: Colors.grey,
+                          SizedBox(
+                            width: 40,
+                            child: IconButton(
+                              onPressed: selectGIF,
+                              icon: const Icon(
+                                Icons.gif,
+                                color: Colors.grey,
+                              ),
                             ),
                           ),
                         ],

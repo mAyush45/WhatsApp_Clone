@@ -42,7 +42,7 @@ class MyApp extends ConsumerWidget {
           if (user == null) {
             return const LandingScreen();
           }
-          return const MobileScreenLayout();
+          return MobileLayoutScreen(user: user,);
         },
         error: (err, trace) {
           return ErrorScreen(

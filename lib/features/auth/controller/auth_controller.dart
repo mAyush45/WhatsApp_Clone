@@ -40,9 +40,23 @@ class AuthController {
     );
   }
 
+  Future<void> signOut(BuildContext context) async{
+    await authRepository.signOut(context);
+  }
+
   void saveUserDataToFirebase(
       BuildContext context, String name, File? profilePic) {
     authRepository.saveUserDataToFirebase(
+      name: name,
+      profilePic: profilePic,
+      ref: ref,
+      context: context,
+    );
+  }
+
+  void updateUserDataToFirebase(
+      BuildContext context, String name, File? profilePic) {
+    authRepository.updateUserDataToFirebase(
       name: name,
       profilePic: profilePic,
       ref: ref,

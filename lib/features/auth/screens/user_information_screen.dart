@@ -1,11 +1,15 @@
 import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:whatsapp_clone/common/utils/utils.dart';
 import 'package:whatsapp_clone/features/auth/controller/auth_controller.dart';
 
+import '../../../common/utils/colors.dart';
+
 class UserInformationScreen extends ConsumerStatefulWidget {
   static const String routeName = '/user-information';
+
   const UserInformationScreen({Key? key}) : super(key: key);
 
   @override
@@ -45,10 +49,15 @@ class _UserInformationScreenState extends ConsumerState<UserInformationScreen> {
     final size = MediaQuery.of(context).size;
 
     return Scaffold(
+      appBar: AppBar(
+        centerTitle: true,
+        title: const Text('Create Your Profile'),
+      ),
       body: SafeArea(
         child: Center(
           child: Column(
             children: [
+              const SizedBox(height: 40),
               Stack(
                 children: [
                   image == null
@@ -76,25 +85,33 @@ class _UserInformationScreenState extends ConsumerState<UserInformationScreen> {
                   ),
                 ],
               ),
-              Row(
-                children: [
-                  Container(
-                    width: size.width * 0.85,
-                    padding: const EdgeInsets.all(20),
-                    child: TextField(
-                      controller: nameController,
-                      decoration: const InputDecoration(
-                        hintText: 'Enter your name',
-                      ),
+              Container(
+                width: size.width * 0.85,
+                padding: const EdgeInsets.all(20),
+                child: TextField(
+                  controller: nameController,
+                  decoration: const InputDecoration(
+                    hintText: 'Enter your name',
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all<Color>(tabColor),
+                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                    RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(
+                          20), // Change the border radius to make it rounded
                     ),
                   ),
-                  IconButton(
-                    onPressed: storeUserData,
-                    icon: const Icon(
-                      Icons.done,
-                    ),
-                  ),
-                ],
+                ),
+                onPressed: storeUserData,
+                child: const Text(
+                  'Create',
+                    style: TextStyle(color: Colors.white)
+
+                ),
               ),
             ],
           ),

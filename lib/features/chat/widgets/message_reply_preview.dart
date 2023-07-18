@@ -1,12 +1,15 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:whatsapp_clone/common/utils/colors.dart';
 
 import 'package:whatsapp_clone/features/chat/widgets/display_text_image_gif.dart';
 
 import '../../../common/provider/message_reply_provider.dart';
 
 class MessageReplyPreview extends ConsumerWidget {
-  const MessageReplyPreview({Key? key}) : super(key: key);
+  final String senderName;
+  const MessageReplyPreview({required this.senderName, Key? key}) : super(key: key);
 
   void cancelReply(WidgetRef ref) {
     ref.read(messageReplyProvider.state).update((state) => null);
@@ -20,7 +23,7 @@ class MessageReplyPreview extends ConsumerWidget {
       width: 350,
       padding: const EdgeInsets.all(8),
       decoration: const BoxDecoration(
-        color: Colors.transparent,
+        color: appBarColor,
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(12),
           topRight: Radius.circular(12),
@@ -28,24 +31,29 @@ class MessageReplyPreview extends ConsumerWidget {
       ),
       child: Column(
         children: [
-          Row(
-            children: [
-              Expanded(
-                child: Text(
-                  messageReply!.isMe ? 'Me' : 'Opposite',
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
+          Padding(
+            padding: const EdgeInsets.all(8),
+            child: Row(
+              children: [
+                
+                Expanded(
+                  child: Text(
+                    messageReply!.isMe ? 'Me' : senderName,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
-              ),
-              GestureDetector(
-                child: const Icon(
-                  Icons.close,
-                  size: 16,
+                GestureDetector(
+                  child: const Icon(
+                    CupertinoIcons.clear_circled_solid,
+                    size: 20,
+                    color: tabColor,
+                  ),
+                  onTap: () => cancelReply(ref),
                 ),
-                onTap: () => cancelReply(ref),
-              ),
-            ],
+              ],
+            ),
           ),
           const SizedBox(height: 8),
           DisplayTextImageGIF(

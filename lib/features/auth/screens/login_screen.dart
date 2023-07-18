@@ -55,6 +55,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Enter your phone number'),
+        centerTitle: true,
         elevation: 0,
         backgroundColor: backgroundColor,
       ),
@@ -65,13 +66,14 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const Text('WhatsApp will need to verify your phone number.'),
-              const SizedBox(height: 10),
+              const SizedBox(height: 20),
               TextButton(
                 onPressed: pickCountry,
                 child: const Text('Pick Country'),
               ),
               const SizedBox(height: 5),
               Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   if (country != null) Text('+${country!.phoneCode}'),
                   const SizedBox(width: 10),
@@ -82,6 +84,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       decoration: const InputDecoration(
                         hintText: 'phone number',
                       ),
+
                     ),
                   ),
                 ],
