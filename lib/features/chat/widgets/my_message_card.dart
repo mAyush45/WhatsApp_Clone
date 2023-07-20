@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:swipe_to/swipe_to.dart';
-
-import 'package:whatsapp_clone/common/utils/colors.dart';
 import 'package:whatsapp_clone/common/enums/message_enum.dart';
+import 'package:whatsapp_clone/common/utils/colors.dart';
 import 'package:whatsapp_clone/features/chat/widgets/display_text_image_gif.dart';
 
 class MyMessageCard extends StatelessWidget {
@@ -41,13 +40,14 @@ class MyMessageCard extends StatelessWidget {
           ),
           child: Card(
             elevation: 1,
-            shape:
-                const RoundedRectangleBorder(borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(8),
-                  bottomLeft: Radius.circular(8),
-                  bottomRight: Radius.circular(8),
-                ),
-                  side: BorderSide.none,),
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(8),
+                bottomLeft: Radius.circular(8),
+                bottomRight: Radius.circular(8),
+              ),
+              side: BorderSide.none,
+            ),
             color: messageColor,
             margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
             child: Stack(
@@ -58,7 +58,7 @@ class MyMessageCard extends StatelessWidget {
                           left: 25,
                           right: 32,
                           top: 5,
-                          bottom: 22,
+                          bottom: 24,
                         )
                       : const EdgeInsets.only(
                           left: 5,
@@ -109,7 +109,7 @@ class MyMessageCard extends StatelessWidget {
                         date,
                         style: const TextStyle(
                           fontSize: 13,
-                          color: Colors.white60,
+                          color: backgroundColor,
                         ),
                       ),
                       const SizedBox(
@@ -118,7 +118,7 @@ class MyMessageCard extends StatelessWidget {
                       Icon(
                         isSeen ? Icons.done_all : Icons.done,
                         size: 20,
-                        color: isSeen ? Colors.blue : Colors.white60,
+                        color: isSeen ? Colors.white : Colors.black87,
                       ),
                     ],
                   ),

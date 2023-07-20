@@ -4,13 +4,17 @@ class ChatContact {
   final String contactId;
   final DateTime timeSent;
   final String lastMessage;
+
+
   ChatContact({
     required this.name,
     required this.profilePic,
     required this.contactId,
     required this.timeSent,
     required this.lastMessage,
+
   });
+
 
   Map<String, dynamic> toMap() {
     return {
@@ -19,6 +23,7 @@ class ChatContact {
       'contactId': contactId,
       'timeSent': timeSent.millisecondsSinceEpoch,
       'lastMessage': lastMessage,
+
     };
   }
 
@@ -29,6 +34,7 @@ class ChatContact {
       contactId: map['contactId'] ?? '',
       timeSent: DateTime.fromMillisecondsSinceEpoch(map['timeSent']),
       lastMessage: map['lastMessage'] ?? '',
+
     );
   }
 }

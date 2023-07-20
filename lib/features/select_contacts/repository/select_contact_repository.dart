@@ -6,6 +6,8 @@ import 'package:whatsapp_clone/common/utils/utils.dart';
 import 'package:whatsapp_clone/models/user_model.dart';
 import 'package:whatsapp_clone/features/chat/screens/mobile_chat_screen.dart';
 
+import '../../../models/chat_contact.dart';
+
 final selectContactsRepositoryProvider = Provider(
   (ref) => SelectContactRepository(
     firestore: FirebaseFirestore.instance,
@@ -47,7 +49,7 @@ class SelectContactRepository {
   void selectContact(Contact selectedContact, BuildContext context) async {
     try {
       var userCollection = await firestore.collection('users').get();
-      List<Contact> matchingContacts = [];
+      List<ChatContact> matchingContacts = [];
 
       for (var document in userCollection.docs) {
         var userData = UserModel.fromMap(document.data());
@@ -71,22 +73,28 @@ class SelectContactRepository {
 
         if (selectedPhoneNum == userData.phoneNumber) {
           if (selectedPhoneNum.startsWith('+91')) {
-            matchingContacts.add(selectedContact);
+            // Create a new ChatContact using the matched user data
+            var matchedContact = ChatContact(
+              name: userData.name,
+              profilePic: userData.profilePic,
+              contactId: userData.uid,
+              timeSent: DateTime.now(), // Or set to a default value if needed
+              lastMessage: "", // Or set to a default value if needed
+            );
+            matchingContacts.add(matchedContact);
           }
         }
       }
 
       if (matchingContacts.length == 1) {
         var selectedContact = matchingContacts[0];
-        var userData = UserModel.fromMap(userCollection.docs[0].data());
-
+        // Use the selectedContact data for navigation
         Navigator.pushNamed(
           context,
           MobileChatScreen.routeName,
           arguments: {
-            'name': userData.name,
-            'uid': userData.uid,
-            'isGroupChat': false,
+            'name': selectedContact.name,
+            'uid': selectedContact.contactId,
           },
         );
       } else {
@@ -99,4 +107,5 @@ class SelectContactRepository {
       showSnackBar(context: context, content: e.toString());
     }
   }
+
 }

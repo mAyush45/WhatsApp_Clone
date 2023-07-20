@@ -7,7 +7,6 @@ import 'package:whatsapp_clone/features/select_contacts/controller/select_contac
 
 class SelectContactsScreen extends ConsumerWidget {
   static const String routeName = '/select-contact';
-
   const SelectContactsScreen({Key? key}) : super(key: key);
 
   void selectContact(
@@ -23,18 +22,7 @@ class SelectContactsScreen extends ConsumerWidget {
       appBar: AppBar(
         title: const Text('Select contact'),
         actions: [
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(
-              Icons.search,
-            ),
-          ),
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(
-              Icons.more_vert,
-            ),
-          ),
+
         ],
       ),
       body: ref.watch(getContactsProvider).when(

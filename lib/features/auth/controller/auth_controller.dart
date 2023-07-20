@@ -28,16 +28,20 @@ class AuthController {
     return user;
   }
 
-  void signInWithPhone(BuildContext context, String phoneNumber) {
-    authRepository.signInWithPhone(context, phoneNumber);
-  }
+  // void signInWithPhone(BuildContext context, String phoneNumber) {
+  //   authRepository.signInWithPhone(context, phoneNumber);
+  // }
+  //
+  // void verifyOTP(BuildContext context, String verificationId, String userOTP) {
+  //   authRepository.verifyOTP(
+  //     context: context,
+  //     verificationId: verificationId,
+  //     userOTP: userOTP,
+  //   );
+  // }
 
-  void verifyOTP(BuildContext context, String verificationId, String userOTP) {
-    authRepository.verifyOTP(
-      context: context,
-      verificationId: verificationId,
-      userOTP: userOTP,
-    );
+  Future <void> signInWithGoogle(BuildContext context) async {
+    await authRepository.signInWithGoogle(context);
   }
 
   Future<void> signOut(BuildContext context) async{
@@ -45,12 +49,12 @@ class AuthController {
   }
 
   void saveUserDataToFirebase(
-      BuildContext context, String name, File? profilePic) {
+      BuildContext context, String name,String phoneNumber, File? profilePic) {
     authRepository.saveUserDataToFirebase(
       name: name,
       profilePic: profilePic,
       ref: ref,
-      context: context,
+      context: context, phoneNumber: phoneNumber,
     );
   }
 

@@ -12,22 +12,22 @@ import 'package:whatsapp_clone/features/select_contacts/screens/select_contacts_
 import 'package:whatsapp_clone/models/user_model.dart';
 Route<dynamic> generateRoute(RouteSettings settings) {
   switch (settings.name) {
-
-    case LoginScreen.routeName:
-      return MaterialPageRoute(
-        builder: (context) => const LoginScreen(),
-      );
+    //
+    // case LoginScreen.routeName:
+    //   return MaterialPageRoute(
+    //     builder: (context) => const LoginScreen(),
+    //   );
     case LandingScreen.routeName:
       return MaterialPageRoute(
         builder: (context) => const LandingScreen(),
       );
-    case OTPScreen.routeName:
-      final verificationId = settings.arguments as String;
-      return MaterialPageRoute(
-        builder: (context) => OTPScreen(
-          verificationId: verificationId,
-        ),
-      );
+    // case OTPScreen.routeName:
+    //   final verificationId = settings.arguments as String;
+    //   return MaterialPageRoute(
+    //     builder: (context) => OTPScreen(
+    //       verificationId: verificationId,
+    //     ),
+    //   );
     case UserInformationScreen.routeName:
       return MaterialPageRoute(
         builder: (context) => const UserInformationScreen(),

@@ -1,11 +1,13 @@
 import 'dart:io';
 
+import 'package:country_picker/country_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart'; // Added to restrict keyboard input
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:whatsapp_clone/common/utils/utils.dart';
-import 'package:whatsapp_clone/features/auth/controller/auth_controller.dart';
 
 import '../../../common/utils/colors.dart';
+import '../../../common/utils/utils.dart';
+import '../controller/auth_controller.dart';
 
 class UserInformationScreen extends ConsumerStatefulWidget {
   static const String routeName = '/user-information';
@@ -13,18 +15,20 @@ class UserInformationScreen extends ConsumerStatefulWidget {
   const UserInformationScreen({Key? key}) : super(key: key);
 
   @override
-  ConsumerState<UserInformationScreen> createState() =>
-      _UserInformationScreenState();
+  _UserInformationScreenState createState() => _UserInformationScreenState();
 }
 
 class _UserInformationScreenState extends ConsumerState<UserInformationScreen> {
   final TextEditingController nameController = TextEditingController();
+  final TextEditingController phoneController = TextEditingController();
   File? image;
+  Country? country;
 
   @override
   void dispose() {
     super.dispose();
     nameController.dispose();
+    phoneController.dispose();
   }
 
   void selectImage() async {
@@ -32,13 +36,28 @@ class _UserInformationScreenState extends ConsumerState<UserInformationScreen> {
     setState(() {});
   }
 
+  void pickCountry() {
+    showCountryPicker(
+      context: context,
+      onSelect: (Country country) {
+        setState(() {
+          this.country = country;
+        });
+      },
+    );
+  }
+
   void storeUserData() async {
     String name = nameController.text.trim();
+    String phoneNumber = phoneController.text;
 
-    if (name.isNotEmpty) {
+    if (name.isNotEmpty && country != null) {
+      // Ensure the phone number is not empty before saving
+      String formattedPhoneNumber = '+${country!.phoneCode}$phoneNumber';
       ref.read(authControllerProvider).saveUserDataToFirebase(
             context,
             name,
+            formattedPhoneNumber,
             image,
           );
     }
@@ -96,22 +115,48 @@ class _UserInformationScreenState extends ConsumerState<UserInformationScreen> {
                 ),
               ),
               const SizedBox(height: 20),
+              TextButton(
+                onPressed: pickCountry,
+                child: const Text('Pick Country'),
+              ),
+              const SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  if (country != null)
+                    Text(
+                      '+${country!.phoneCode}',
+                      style: const TextStyle(color: Colors.white),
+                    ),
+                  const SizedBox(width: 10),
+                  SizedBox(
+                    width: size.width * 0.75,
+                    child: TextField(
+                      controller: phoneController,
+                      decoration: const InputDecoration(
+                        hintText: 'Phone Number',
+                      ),
+                      keyboardType: TextInputType.phone,
+                      inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly
+                      ], // Restrict keyboard to accept only phone numbers
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 40),
               ElevatedButton(
                 style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all<Color>(tabColor),
                   shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                     RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(
-                          20), // Change the border radius to make it rounded
+                      borderRadius: BorderRadius.circular(20),
                     ),
                   ),
                 ),
                 onPressed: storeUserData,
-                child: const Text(
-                  'Create',
-                    style: TextStyle(color: Colors.white)
-
-                ),
+                child:
+                    const Text('Create', style: TextStyle(color: Colors.white)),
               ),
             ],
           ),
